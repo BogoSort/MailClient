@@ -5,7 +5,6 @@ import java.io.*;
 public class BufferedSocketReader {
 
 	public BufferedSocketReader(Socket sock) throws IOException {
-		this.sock = sock;
 		is = sock.getInputStream();
 		buf = new StringBuilder();
 	}
@@ -26,7 +25,6 @@ public class BufferedSocketReader {
 		return ret;
 	}
 	
-	private Socket sock;
 	private InputStream is;
 	
 	private StringBuilder buf;

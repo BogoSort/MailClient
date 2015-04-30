@@ -19,9 +19,9 @@ public class POP3Client {
 		reader = new BufferedSocketReader(sock);
 		
 		//------------ get connection-------------------
-		String greating = reader.getLine();
-		Debug.print("S" ,greating);
-		if (!greating.startsWith("+OK")) {
+		String greeting = reader.getLine();
+		Debug.print("S" ,greeting);
+		if (!greeting.startsWith("+OK")) {
 			throw new Exception("connection failure");
 		}
 		
@@ -57,6 +57,7 @@ public class POP3Client {
 	{
 		String msg;
 		String response;
+		
 		ArrayList<String> mailNos = new ArrayList<String>();
 		
 		msg = "LIST\r\n";
@@ -108,6 +109,7 @@ public class POP3Client {
 		String msg;
 		String response;
 		
+		
 		msg = "RETR " + mailNo + "\r\n";
 		os.write(msg.getBytes());
 		Debug.print("C", msg);
@@ -117,6 +119,7 @@ public class POP3Client {
 		if (!response.startsWith("+OK")) {
 			throw new Exception("no such message (" + mailNo + ")");
 		}
+		
 		
 		while (true) {
 			response = reader.getLine();
