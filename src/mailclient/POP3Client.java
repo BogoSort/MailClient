@@ -5,10 +5,9 @@ import java.util.*;
 
 public class POP3Client {
 	
-	public POP3Client(String server, String user, String addr, String pass, int p) {
+	public POP3Client(String server, String user, String pass, int p) {
 		serverName = server;
 		userName = user;
-		emailAddr = addr;
 		password = pass;
 		port = p;
 	}
@@ -136,7 +135,6 @@ public class POP3Client {
 
 	private String serverName;
 	private String userName;
-	private String emailAddr;
 	private String password;
 	private int port;
 	

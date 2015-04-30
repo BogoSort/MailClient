@@ -1,9 +1,11 @@
 package mailclient;
 
-import java.io.OutputStream;
+import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Date;
 
 public class SMTPClient {
 	
@@ -89,6 +91,75 @@ public class SMTPClient {
 		Debug.print("S", response);
 		if (!response.startsWith("235")) {
 			throw new Exception("authentication error");
+		}
+	}
+	
+	public void send(String sender, ArrayList<String> receiver, String subject, String f) throws Exception {
+		
+		File file = new File(f);
+		String msg;
+		String response;
+		
+		msg = "MAIL FROM: <" + sender + ">\r\n";
+		os.write(msg.getBytes());
+		Debug.print("C", msg);
+		
+		response = reader.getLine();
+		Debug.print("S", response);
+		if (!response.startsWith("250")) {
+			throw new Exception("send failure");
+		}
+		
+		for (int i = 0; i < receiver.size(); ++i) {
+			msg = "RCPT TO: <" + receiver.get(i) + ">\r\n";
+			os.write(msg.getBytes());
+			Debug.print("C", msg);
+			
+			response = reader.getLine();
+			Debug.print("S", response);
+			if (!response.startsWith("250")) {
+				throw new Exception("send failure");
+			}
+		}
+		
+		msg = "DATA\r\n";
+		os.write(msg.getBytes());
+		Debug.print("C", msg);
+		
+		response = reader.getLine();
+		Debug.print("S", response);
+		if (!response.startsWith("354")) {
+			throw new Exception("send failure");
+		}
+			
+		msg  = "Data: " + (new Date()).toString() + "\r\n";
+		msg += "From: <" + sender + ">\r\n";
+		
+		for (int i = 0; i < receiver.size(); ++i) {
+			if (i == 0)
+				msg += "To:";
+			msg += " <" + receiver.get(i) + ">";
+			if (i < receiver.size() - 1)
+				msg += ",";
+			msg += "\r\n";
+		}
+		
+		msg += "Subject: " + subject + "\r\n";
+		msg += "\r\n";
+
+		msg += new FileReader(file).getContent();
+		if (!msg.endsWith("\r\n"))
+			msg += "\r\n";
+		msg += ".\r\n";
+		
+		os.write(msg.getBytes());
+		
+		Debug.print("C", msg);
+		
+		response = reader.getLine();
+		Debug.print("S", response);
+		if (!response.startsWith("250")) {
+			throw new Exception("send failure");
 		}
 	}
 	
