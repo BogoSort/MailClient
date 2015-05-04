@@ -132,7 +132,7 @@ public class SMTPClient {
 			throw new Exception("send failure");
 		}
 			
-		msg  = "Data: " + (new Date()).toString() + "\r\n";
+		msg  = "Date: " + (new Date()).toString() + "\r\n";
 		msg += "From: <" + sender + ">\r\n";
 		
 		for (int i = 0; i < receiver.size(); ++i) {

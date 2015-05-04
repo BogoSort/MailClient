@@ -1,0 +1,74 @@
+The mail client is implemented according to POP3 and SMTP. It can send an email to one or multiple email addresses and retrieve all the emails from the mail server given the user's imformation.
+
+Two major classes are implemented: POP3Client and SMTPClient.
+
+1. POP3Client
+
+Class POP3Client is implemented to retrieve emails according to POP3. The following messages are expected to be exchanged between this client and the mail server.
+
+S: +OK
+C: USER username
+S: +OK
+C: PASS password
+S: +OK
+C: LIST
+S: +OK
+S: id_of_mail size_of_mail
+S: id_of_mail size_of_mail
+...
+S: .
+C: RETR id_of_mail
+S: +OK
+S: content_of_mail
+S: .
+...
+C: QUIT
+S: +OK
+
+2. SMTPClient
+
+Class SMTPClient is implemented to send emails according to SMTP. The following messages are expected to be exchanged between this client and the mail server.
+
+S: 220
+C: EHLO local_ip_address
+S: 250-method
+S: 250-method
+S: ...
+S: 250 method
+C: AUTH LOGIN
+S: 334
+C: base64(sender_addr)
+S: 334
+C: base64(password)
+S: 235
+C: MAIL FROM: <sender_addr>
+S: 250
+C: RCPT TO: <rec_addr>
+S: 250
+C: RCPT TO: <rec_addr>
+S: 250
+...
+C: DATA
+S: 354
+C: header_content
+C: 
+C: mail_content
+C: .
+S: 250
+C: QUIT
+S: 221
+
+Here the header content contains the following information:
+
+Data: current_time
+From: <sender_addr>
+To: <rec_addr>,
+ <rec_addr>,
+...
+ <rec_addr>
+Subject: subject_of_mail
+
+Bugs detected:
+1. The entered subject must not contain any blank characters such as a whitespace
+2. The client will not respond if the entered file name is wrong
+
